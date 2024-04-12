@@ -8,198 +8,198 @@ datasource db {
 }
 
 model actor {
-  actor_id    Int          @id @default(autoincrement())
-  first_name  String       @db.VarChar(45)
-  last_name   String       @db.VarChar(45)
-  last_update DateTime     @default(now()) @db.Timestamp(6)
-  film_actor  film_actor[]
+  actorId    Int          @id @default(autoincrement()) @map("actor_id")
+  firstName  String       @map("first_name") @db.VarChar(45)
+  lastName   String       @map("last_name") @db.VarChar(45)
+  lastUpdate DateTime     @default(now()) @map("last_update") @db.Timestamp(6)
+  filmActor  film_actor[]
 
-  @@index([last_name], map: "idx_actor_last_name")
+  @@index([lastName], map: "idx_actor_last_name")
 }
 
 model address {
-  address_id  Int        @id @default(autoincrement())
-  address     String     @db.VarChar(50)
-  address2    String?    @db.VarChar(50)
-  district    String     @db.VarChar(20)
-  city_id     Int        @db.SmallInt
-  postal_code String?    @db.VarChar(10)
-  phone       String     @db.VarChar(20)
-  last_update DateTime   @default(now()) @db.Timestamp(6)
-  city        city       @relation(fields: [city_id], references: [city_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_address_city")
-  customer    customer[]
-  staff       staff[]
-  store       store[]
+  addressId  Int        @id @default(autoincrement()) @map("address_id")
+  address    String     @db.VarChar(50)
+  address2   String?    @db.VarChar(50)
+  district   String     @db.VarChar(20)
+  cityId     Int        @map("city_id") @db.SmallInt
+  postalCode String?    @map("postal_code") @db.VarChar(10)
+  phone      String     @db.VarChar(20)
+  lastUpdate DateTime   @default(now()) @map("last_update") @db.Timestamp(6)
+  city       city       @relation(fields: [cityId], references: [cityId], onDelete: NoAction, onUpdate: NoAction, map: "fk_address_city")
+  customer   customer[]
+  staff      staff[]
+  store      store[]
 
-  @@index([city_id], map: "idx_fk_city_id")
+  @@index([cityId], map: "idx_fk_city_id")
 }
 
 model category {
-  category_id   Int             @id @default(autoincrement())
-  name          String          @db.VarChar(25)
-  last_update   DateTime        @default(now()) @db.Timestamp(6)
-  film_category film_category[]
+  categoryId   Int             @id @default(autoincrement()) @map("category_id")
+  name         String          @db.VarChar(25)
+  lastUpdate   DateTime        @default(now()) @map("last_update") @db.Timestamp(6)
+  filmCategory film_category[]
 }
 
 model city {
-  city_id     Int       @id @default(autoincrement())
-  city        String    @db.VarChar(50)
-  country_id  Int       @db.SmallInt
-  last_update DateTime  @default(now()) @db.Timestamp(6)
-  address     address[]
-  country     country   @relation(fields: [country_id], references: [country_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_city")
+  cityId     Int       @id @default(autoincrement()) @map("city_id")
+  city       String    @db.VarChar(50)
+  countryId  Int       @map("country_id") @db.SmallInt
+  lastUpdate DateTime  @default(now()) @map("last_update") @db.Timestamp(6)
+  address    address[]
+  country    country   @relation(fields: [countryId], references: [countryId], onDelete: NoAction, onUpdate: NoAction, map: "fk_city")
 
-  @@index([country_id], map: "idx_fk_country_id")
+  @@index([countryId], map: "idx_fk_country_id")
 }
 
 model country {
-  country_id  Int      @id @default(autoincrement())
-  country     String   @db.VarChar(50)
-  last_update DateTime @default(now()) @db.Timestamp(6)
-  city        city[]
+  countryId  Int      @id @default(autoincrement()) @map("country_id")
+  country    String   @db.VarChar(50)
+  lastUpdate DateTime @default(now()) @map("last_update") @db.Timestamp(6)
+  city       city[]
 }
 
 model customer {
-  customer_id Int       @id @default(autoincrement())
-  store_id    Int       @db.SmallInt
-  first_name  String    @db.VarChar(45)
-  last_name   String    @db.VarChar(45)
-  email       String?   @db.VarChar(50)
-  address_id  Int       @db.SmallInt
-  activebool  Boolean   @default(true)
-  create_date DateTime  @default(dbgenerated("('now'::text)::date")) @db.Date
-  last_update DateTime? @default(now()) @db.Timestamp(6)
-  active      Int?
-  address     address   @relation(fields: [address_id], references: [address_id])
-  payment     payment[]
-  rental      rental[]
+  customerId Int       @id @default(autoincrement()) @map("customer_id")
+  storeId    Int       @map("store_id") @db.SmallInt
+  firstName  String    @map("first_name") @db.VarChar(45)
+  lastName   String    @map("last_name") @db.VarChar(45)
+  email      String?   @db.VarChar(50)
+  addressId  Int       @map("address_id") @db.SmallInt
+  activebool Boolean   @default(true)
+  createDate DateTime  @default(dbgenerated("('now'::text)::date")) @map("create_date") @db.Date
+  lastUpdate DateTime? @default(now()) @map("last_update") @db.Timestamp(6)
+  active     Int?
+  address    address   @relation(fields: [addressId], references: [addressId])
+  payment    payment[]
+  rental     rental[]
 
-  @@index([address_id], map: "idx_fk_address_id")
-  @@index([store_id], map: "idx_fk_store_id")
-  @@index([last_name], map: "idx_last_name")
+  @@index([addressId], map: "idx_fk_address_id")
+  @@index([storeId], map: "idx_fk_store_id")
+  @@index([lastName], map: "idx_last_name")
 }
 
 model film {
-  film_id          Int                     @id @default(autoincrement())
-  title            String                  @db.VarChar(255)
-  description      String?
-  release_year     Int?
-  language_id      Int                     @db.SmallInt
-  rental_duration  Int                     @default(3) @db.SmallInt
-  rental_rate      Decimal                 @default(4.99) @db.Decimal(4, 2)
-  length           Int?                    @db.SmallInt
-  replacement_cost Decimal                 @default(19.99) @db.Decimal(5, 2)
-  rating           mpaa_rating?            @default(G)
-  last_update      DateTime                @default(now()) @db.Timestamp(6)
-  special_features String[]
-  fulltext         Unsupported("tsvector")
-  language         language                @relation(fields: [language_id], references: [language_id])
-  film_actor       film_actor[]
-  film_category    film_category[]
-  inventory        inventory[]
+  filmId          Int                     @id @default(autoincrement()) @map("film_id")
+  title           String                  @db.VarChar(255)
+  description     String?
+  releaseYear     Int?                    @map("release_year")
+  languageId      Int                     @map("language_id") @db.SmallInt
+  rentalDuration  Int                     @default(3) @map("rental_duration") @db.SmallInt
+  rentalRate      Decimal                 @default(4.99) @map("rental_rate") @db.Decimal(4, 2)
+  length          Int?                    @db.SmallInt
+  replacementCost Decimal                 @default(19.99) @map("replacement_cost") @db.Decimal(5, 2)
+  rating          mpaa_rating?            @default(G)
+  last_update     DateTime                @default(now()) @map("last_update") @db.Timestamp(6)
+  specialFeatures String[]                @map("special_features")
+  fulltext        Unsupported("tsvector")
+  language        language                @relation(fields: [languageId], references: [languageId])
+  filmActor       film_actor[]
+  filmAategory    film_category[]
+  inventory       inventory[]
 
   @@index([fulltext], type: Gist)
-  @@index([language_id], map: "idx_fk_language_id")
+  @@index([languageId], map: "idx_fk_language_id")
   @@index([title], map: "idx_title")
 }
 
 model film_actor {
-  actor_id    Int      @db.SmallInt
-  film_id     Int      @db.SmallInt
-  last_update DateTime @default(now()) @db.Timestamp(6)
-  actor       actor    @relation(fields: [actor_id], references: [actor_id])
-  film        film     @relation(fields: [film_id], references: [film_id])
+  actorId    Int      @map("actor_id") @db.SmallInt
+  filmId     Int      @map("film_id") @db.SmallInt
+  lastUpdate DateTime @default(now()) @map("last_update") @db.Timestamp(6)
+  actor      actor    @relation(fields: [actorId], references: [actorId])
+  film       film     @relation(fields: [filmId], references: [filmId])
 
-  @@id([actor_id, film_id])
-  @@index([film_id], map: "idx_fk_film_id")
+  @@id([actorId, filmId])
+  @@index([filmId], map: "idx_fk_film_id")
 }
 
 model film_category {
-  film_id     Int      @db.SmallInt
-  category_id Int      @db.SmallInt
-  last_update DateTime @default(now()) @db.Timestamp(6)
-  category    category @relation(fields: [category_id], references: [category_id])
-  film        film     @relation(fields: [film_id], references: [film_id])
+  filmId     Int      @map("film_id") @db.SmallInt
+  categoryId Int      @map("category_id") @db.SmallInt
+  lastUpdate DateTime @default(now()) @map("last_update") @db.Timestamp(6)
+  category   category @relation(fields: [categoryId], references: [categoryId])
+  film       film     @relation(fields: [filmId], references: [filmId])
 
-  @@id([film_id, category_id])
+  @@id([filmId, categoryId])
 }
 
 model inventory {
-  inventory_id Int      @id @default(autoincrement())
-  film_id      Int      @db.SmallInt
-  store_id     Int      @db.SmallInt
-  last_update  DateTime @default(now()) @db.Timestamp(6)
-  film         film     @relation(fields: [film_id], references: [film_id])
-  rental       rental[]
+  inventoryId Int      @id @default(autoincrement()) @map("inventory_id")
+  filmId      Int      @map("film_id") @db.SmallInt
+  storeId     Int      @map("store_id") @db.SmallInt
+  lastUpdate  DateTime @default(now()) @map("last_update") @db.Timestamp(6)
+  film        film     @relation(fields: [filmId], references: [filmId])
+  rental      rental[]
 
-  @@index([store_id, film_id], map: "idx_store_id_film_id")
+  @@index([storeId, filmId], map: "idx_store_id_film_id")
 }
 
 model language {
-  language_id Int      @id @default(autoincrement())
-  name        String   @db.Char(20)
-  last_update DateTime @default(now()) @db.Timestamp(6)
-  film        film[]
+  languageId Int      @id @default(autoincrement()) @map("language_id")
+  name       String   @db.Char(20)
+  lastUpdate DateTime @default(now()) @map("last_update") @db.Timestamp(6)
+  film       film[]
 }
 
 model payment {
-  payment_id   Int      @id @default(autoincrement())
-  customer_id  Int      @db.SmallInt
-  staff_id     Int      @db.SmallInt
-  rental_id    Int
-  amount       Decimal  @db.Decimal(5, 2)
-  payment_date DateTime @db.Timestamp(6)
-  customer     customer @relation(fields: [customer_id], references: [customer_id])
-  rental       rental   @relation(fields: [rental_id], references: [rental_id], onDelete: SetNull)
-  staff        staff    @relation(fields: [staff_id], references: [staff_id])
+  paymentId   Int      @id @default(autoincrement()) @map("payment_id")
+  customerId  Int      @map("customer_id") @db.SmallInt
+  staffId     Int      @map("language_id") @db.SmallInt
+  rentalId    Int      @map("rental_id")
+  amount      Decimal  @db.Decimal(5, 2)
+  paymentDate DateTime @map("payment_date") @db.Timestamp(6)
+  customer    customer @relation(fields: [customerId], references: [customerId])
+  rental      rental   @relation(fields: [rentalId], references: [rentalId], onDelete: SetNull)
+  staff       staff    @relation(fields: [staffId], references: [staffId])
 
-  @@index([customer_id], map: "idx_fk_customer_id")
-  @@index([rental_id], map: "idx_fk_rental_id")
-  @@index([staff_id], map: "idx_fk_staff_id")
+  @@index([customerId], map: "idx_fk_customer_id")
+  @@index([rentalId], map: "idx_fk_rental_id")
+  @@index([staffId], map: "idx_fk_staff_id")
 }
 
 model rental {
-  rental_id    Int       @id @default(autoincrement())
-  rental_date  DateTime  @db.Timestamp(6)
-  inventory_id Int
-  customer_id  Int       @db.SmallInt
-  return_date  DateTime? @db.Timestamp(6)
-  staff_id     Int       @db.SmallInt
-  last_update  DateTime  @default(now()) @db.Timestamp(6)
-  payment      payment[]
-  customer     customer  @relation(fields: [customer_id], references: [customer_id])
-  inventory    inventory @relation(fields: [inventory_id], references: [inventory_id])
-  staff        staff     @relation(fields: [staff_id], references: [staff_id], onDelete: NoAction, onUpdate: NoAction, map: "rental_staff_id_key")
+  rentalId    Int       @id @default(autoincrement()) @map("rental_id")
+  rentalDate  DateTime  @map("rental_date") @db.Timestamp(6)
+  inventoryId Int       @map("inventory_id")
+  customerId  Int       @map("customer_id") @db.SmallInt
+  returnDate  DateTime? @map("return_date") @db.Timestamp(6)
+  staffId     Int       @map("staff_id") @db.SmallInt
+  lastUpdate  DateTime  @default(now()) @map("last_update") @db.Timestamp(6)
+  payment     payment[]
+  customer    customer  @relation(fields: [customerId], references: [customerId])
+  inventory   inventory @relation(fields: [inventoryId], references: [inventoryId])
+  staff       staff     @relation(fields: [staffId], references: [staffId], onDelete: NoAction, onUpdate: NoAction, map: "rental_staff_id_key")
 
-  @@unique([rental_date, inventory_id, customer_id], map: "idx_unq_rental_rental_date_inventory_id_customer_id")
-  @@index([inventory_id], map: "idx_fk_inventory_id")
+  @@unique([rentalDate, inventoryId, customerId], map: "idx_unq_rental_rental_date_inventory_id_customer_id")
+  @@index([inventoryId], map: "idx_fk_inventory_id")
 }
 
 model staff {
-  staff_id    Int       @id @default(autoincrement())
-  first_name  String    @db.VarChar(45)
-  last_name   String    @db.VarChar(45)
-  address_id  Int       @db.SmallInt
-  email       String?   @db.VarChar(50)
-  store_id    Int       @db.SmallInt
-  active      Boolean   @default(true)
-  username    String    @db.VarChar(16)
-  password    String?   @db.VarChar(40)
-  last_update DateTime  @default(now()) @db.Timestamp(6)
-  picture     Bytes?
-  payment     payment[]
-  rental      rental[]
-  address     address   @relation(fields: [address_id], references: [address_id])
-  store       store?
+  staffId    Int       @id @default(autoincrement()) @map("staff_id")
+  firstName  String    @map("first_name") @db.VarChar(45)
+  lastName   String    @map("last_name") @db.VarChar(45)
+  addressId  Int       @map("address_id") @db.SmallInt
+  email      String?   @db.VarChar(50)
+  storeId    Int       @map("store_id") @db.SmallInt
+  active     Boolean   @default(true)
+  username   String    @db.VarChar(16)
+  password   String?   @db.VarChar(40)
+  lastUpdate DateTime  @default(now()) @map("last_update") @db.Timestamp(6)
+  picture    Bytes?
+  payment    payment[]
+  rental     rental[]
+  address    address   @relation(fields: [addressId], references: [addressId])
+  store      store?
 }
 
 model store {
-  store_id         Int      @id @default(autoincrement())
-  manager_staff_id Int      @unique(map: "idx_unq_manager_staff_id") @db.SmallInt
-  address_id       Int      @db.SmallInt
-  last_update      DateTime @default(now()) @db.Timestamp(6)
-  address          address  @relation(fields: [address_id], references: [address_id])
-  staff            staff    @relation(fields: [manager_staff_id], references: [staff_id])
+  storeId        Int      @id @default(autoincrement()) @map("store_id")
+  managerStaffId Int      @unique(map: "idx_unq_manager_staff_id") @map("manager_staff_id") @db.SmallInt
+  addressId      Int      @map("address_id") @db.SmallInt
+  lastUpdate     DateTime @default(now()) @map("last_update") @db.Timestamp(6)
+  address        address  @relation(fields: [addressId], references: [addressId])
+  staff          staff    @relation(fields: [managerStaffId], references: [staffId])
 }
 
 enum mpaa_rating {
