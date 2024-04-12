@@ -145,7 +145,7 @@ model language {
 model payment {
   paymentId   Int      @id @default(autoincrement()) @map("payment_id")
   customerId  Int      @map("customer_id") @db.SmallInt
-  staffId     Int      @map("language_id") @db.SmallInt
+  staffId     Int      @db.SmallInt @map("staff_id")
   rentalId    Int      @map("rental_id")
   amount      Decimal  @db.Decimal(5, 2)
   paymentDate DateTime @map("payment_date") @db.Timestamp(6)
